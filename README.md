@@ -61,3 +61,55 @@ ollama run llama3
 ```
 
 and give it your first prompt to see how it responds.
+
+### Step 3: Create a Virtual Environment
+
+Create a Python virtual environment to manage dependencies:
+
+--on MacOS and Linux:
+
+```bash
+python -m venv customChatbotName
+```
+
+--on Windows:
+
+```bash
+python3 -m venv customChatbotName
+```
+
+Activate the virtual environment:
+
+--on MacOS and Linux:
+
+```bash
+source customChatbotName/bin/activate
+```
+
+--on Windows:
+
+```bash
+.\customChatbotName\Scripts\activate
+```
+
+or in PowerShell:
+
+```bash
+.\customChatbotName\Scripts\Activate.ps1
+```
+
+or in cmd:
+
+```bash
+.\customChatbotName\Scripts\activate.bat
+```
+
+Upon activation, you should see the virtual environment name prefix your terminal prompt.
+
+### Step 4: Install Dependency Packages
+
+In the activated virtual environment, install the required Python packages within the virtual environment:
+
+```bash
+pip install langchain langchain-ollama ollama
+```
