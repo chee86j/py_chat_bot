@@ -23,16 +23,22 @@ def handle_conversation():
         user_input = input("You: ")
         if user_input.lower() == "exit":
             break
-        
-        # Invoke the model with the context and user input
-        result = chain.invoke({"context": context, "question": user_input})
-        
-        # Ensure Clean & Concise Response
-        response = result.strip() if isinstance(result, str) else result
-        print("Bot:", response)
-        
-        # Update the context with the latest conversation turn
-        context += f"\nYou: {user_input}\nAI: {response}"
-        
+
+        print("Thinking...")  # Feedback to the User
+
+        try:
+            # Invoke Model w/ the Context & User Input
+            result = chain.invoke({"context": context, "question": user_input})
+            
+            # Ensure Clean & Concise Response
+            response = result.strip() if isinstance(result, str) else result
+            print("Bot:", response)
+
+            # Update the Context w/ the Latest Conversation turn
+            context += f"\nYou: {user_input}\nAI: {response}"
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
 if __name__ == "__main__":
     handle_conversation()
+
