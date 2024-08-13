@@ -113,3 +113,11 @@ In the activated virtual environment, install the required Python packages withi
 ```bash
 pip install langchain langchain-ollama ollama
 ```
+
+### Step 5: Run the Chatbot
+
+Run the chatbot script to start the conversation:
+
+```bash
+python3 main.py
+```
