@@ -1,6 +1,7 @@
-# Import necessary classes from langchain_ollama library.
+# Import necessary classes from langchain_ollama library and TextBlob for sentiment analysis.
 from langchain_ollama import OllamaLLM
 from langchain_core.prompts import ChatPromptTemplate
+from textblob import TextBlob
 
 # Define the template for the chatbot's responses, setting AI's role and how it should handle conversation context.
 template = """
@@ -23,6 +24,19 @@ prompt = ChatPromptTemplate.from_template(template)
 # Combine the prompt template w/ model to create a processing chain.
 chain = prompt | model
 
+# Function to analyze sentiment of user input for richer conversational experience.
+# This is used to help the model understand the user's mood and respond accordingly in
+# a more human-like manner to recognize to tailor its responses to more empathetic or helpful.
+def analyze_sentiment(text):
+    analysis = TextBlob(text)
+    # Returns 'positive', 'negative', or 'neutral' based on the polarity score.
+    if analysis.sentiment.polarity > 0:
+        return 'positive'
+    elif analysis.sentiment.polarity < 0:
+        return 'negative'
+    else:
+        return 'neutral'
+
 # Define the function to handle ongoing conversation.
 def handle_conversation():
     context = ""  # Initialize an empty context for conversation.
@@ -41,14 +55,20 @@ def handle_conversation():
             print("Type any question or 'exit' to leave, 'reset' to start over.")
             continue
 
+        # Perform sentiment analysis on the user input.
+        sentiment = analyze_sentiment(user_input)
+        print(f"Detected sentiment: {sentiment}.")  # Display detected sentiment.
+
         print("Thinking...")  # Indicate that the Bot is Processing.
         try:
+            # Append sentiment information to the context for the model to use.
+            sentiment_context = f"{context} Sentiment: {sentiment}."
             # Invoke the Model w/ Current Context & the New User Question.
-            result = chain.invoke({"context": context, "question": user_input})
+            result = chain.invoke({"context": sentiment_context, "question": user_input})
             # Strip the Response from the Model to Ensure No Leading/Trailing Whitespaces.
             response = result.strip()
             print("Bot:", response)  # Print the Bot's Response.
-            # Update the Context w.the Latest Exchange.
+            # Update the Context w/ the Latest Exchange.
             context += f"\nYou: {user_input}\nAI: {response}"
         except Exception as e:
             # Handle Any Exceptions.
